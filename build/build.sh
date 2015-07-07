@@ -11,7 +11,7 @@ OPT_DEBUG="-use-network=false \
 
 OPT_RELEASE="-use-network=false \
     -optimize=true \
-    -define=CONFIG::LOGGING,false \
+    -define=CONFIG::LOGGING,true \
     -define=CONFIG::FLASH_11_1,true"
 
 OPT_DEBUG_10_1="-use-network=false \
@@ -21,7 +21,7 @@ OPT_DEBUG_10_1="-use-network=false \
 
 OPT_RELEASE_10_1="-use-network=false \
     -optimize=true \
-    -define=CONFIG::LOGGING,false \
+    -define=CONFIG::LOGGING,true \
     -define=CONFIG::FLASH_11_1,false"
 
 echo "Compiling bin/debug/flashls.swc"
@@ -29,14 +29,14 @@ $FLEXPATH/bin/compc \
     $OPT_DEBUG_10_1 \
     -include-sources ../src/org/mangui/hls \
     -output ../bin/debug/flashls.swc \
-    -target-player="10.1"
+    -target-player="10.2"
 
 echo "Compiling bin/release/flashls.swc"
 $FLEXPATH/bin/compc \
     $OPT_RELEASE_10_1 \
     -include-sources ../src/org/mangui/hls \
     -output ../bin/release/flashls.swc \
-    -target-player="10.1"
+    -target-player="10.2"
 
 echo "Compiling bin/release/flashlsChromeless.swf"
 $FLEXPATH/bin/mxmlc ../src/org/mangui/chromeless/ChromelessPlayer.as \
@@ -94,7 +94,7 @@ $FLEXPATH/bin/mxmlc ../src/org/mangui/osmf/plugins/HLSDynamicPlugin.as \
     $OPT_RELEASE_10_1 \
     -library-path+=../lib/osmf \
     -load-externs ../lib/osmf/exclude-sources.xml \
-    -target-player="10.1" #-compiler.verbose-stacktraces=true -link-report=../test/osmf/link-report.xml
+    -target-player="10.2" #-compiler.verbose-stacktraces=true -link-report=../test/osmf/link-report.xml
 ./add-opt-in.py ../bin/release/flashlsOSMF.swf
 
 echo "Compiling bin/debug/flashlsOSMF.swf"
@@ -104,7 +104,7 @@ $FLEXPATH/bin/mxmlc ../src/org/mangui/osmf/plugins/HLSDynamicPlugin.as \
     $OPT_DEBUG_10_1 \
     -library-path+=../lib/osmf \
     -load-externs ../lib/osmf/exclude-sources.xml \
-    -target-player="10.1" #-compiler.verbose-stacktraces=true -link-report=../test/osmf/link-report.xml
+    -target-player="10.2" #-compiler.verbose-stacktraces=true -link-report=../test/osmf/link-report.xml
 ./add-opt-in.py ../bin/debug/flashlsOSMF.swf
 
 echo "Compiling bin/release/flashlsOSMF.swc"
@@ -113,7 +113,7 @@ $FLEXPATH/bin/compc -include-sources ../src/org/mangui/osmf \
     $OPT_RELEASE_10_1 \
     -library-path+=../bin/release/flashls.swc \
     -library-path+=../lib/osmf \
-    -target-player="10.1" \
+    -target-player="10.2" \
     -debug=false \
     -external-library-path+=../lib/osmf
 
@@ -123,7 +123,7 @@ $FLEXPATH/bin/compc -include-sources ../src/org/mangui/osmf \
     $OPT_DEBUG_10_1 \
     -library-path+=../bin/debug/flashls.swc \
     -library-path+=../lib/osmf \
-    -target-player="10.1" \
+    -target-player="10.2" \
     -debug=false \
     -external-library-path+=../lib/osmf
 
