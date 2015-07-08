@@ -1,7 +1,8 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
- package org.mangui.hls.loader {
+ package org.mangui.hls.loader
+ {
     import org.mangui.hls.playlist.DataUri;
     import org.mangui.hls.playlist.AltAudioTrack;
     import org.mangui.hls.playlist.Manifest;
@@ -52,7 +53,8 @@
         private var _alt_audio_tracks : Vector.<AltAudioTrack>;
 
         /** Setup the loader. **/
-        public function ManifestLoader(hls : HLS) {
+        public function ManifestLoader(hls:HLS)
+        {
             _hls = hls;
             _hls.addEventListener(HLSEvent.PLAYBACK_STATE, _stateHandler);
             _hls.addEventListener(HLSEvent.LEVEL_SWITCH, _levelSwitchHandler);
@@ -61,9 +63,15 @@
             _urlloader.addEventListener(Event.COMPLETE, _loaderHandler);
             _urlloader.addEventListener(IOErrorEvent.IO_ERROR, _errorHandler);
             _urlloader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _errorHandler);
-        };
 
-        public function dispose() : void {
+            _hls.addEventListener("HLS.Reconnect", _reconnect);
+        }
+
+        public function dispose() : void
+        {
+
+            CONFIG::LOGGING { Log.warn('disposing ManifestLoader'); }
+
             _close();
             _urlloader.removeEventListener(Event.COMPLETE, _loaderHandler);
             _urlloader.removeEventListener(IOErrorEvent.IO_ERROR, _errorHandler);
@@ -140,7 +148,7 @@
             _retry_count = 0;
             var loader : URLLoader = URLLoader(event.target);
             _parseManifest(String(loader.data));
-        };
+        }
 
         /** parse a playlist **/
         private function _parseLevelPlaylist(string : String, url : String, level : int) : void {
@@ -167,6 +175,7 @@
                 }
                 _timeoutID = setTimeout(_loadActiveLevelPlaylist, timeout);
             }
+
             if (!_canStart) {
                 _canStart = (_levels[level].fragments.length > 0);
                 if (_canStart) {
@@ -178,7 +187,7 @@
             }
             _hls.dispatchEvent(new HLSEvent(HLSEvent.LEVEL_LOADED, level));
             _manifest_loading = null;
-        };
+        }
 
         /** Parse First Level Playlist **/
         private function _parseManifest(string : String) : void {
@@ -223,19 +232,23 @@
                 var hlsError : HLSError = new HLSError(HLSError.MANIFEST_PARSING_ERROR, _url, "Manifest is not a valid M3U8 file");
                 _hls.dispatchEvent(new HLSEvent(HLSEvent.ERROR, hlsError));
             }
-        };
+        }
 
         /** load/reload active M3U8 playlist **/
-        private function _loadActiveLevelPlaylist() : void {
-            if (_closed) {
+        private function _loadActiveLevelPlaylist():void
+        {
+            CONFIG::LOGGING { Log.debug("_loadActiveLevelPlaylist-> " + _closed + " " + _reconnecting); }
+            if (_closed && !_reconnecting)
+            {
                 return;
             }
+
             _reload_playlists_timer = getTimer();
             // load active M3U8 playlist only
             _manifest_loading = new Manifest();
             _hls.dispatchEvent(new HLSEvent(HLSEvent.LEVEL_LOADING, _current_level));
             _manifest_loading.loadPlaylist(_levels[_current_level].url, _parseLevelPlaylist, _errorHandler, _current_level, _type, HLSSettings.flushLiveURLCache);
-        };
+        }
 
         /** When level switch occurs, assess the need of (re)loading new level playlist **/
         private function _levelSwitchHandler(event : HLSEvent) : void {
@@ -253,29 +266,55 @@
                     _timeoutID = setTimeout(_loadActiveLevelPlaylist, 0);
                 }
             }
-        };
+        }
 
-        private function _close() : void {
+        private function _close():void
+        {
             CONFIG::LOGGING {
                 Log.debug("cancel any manifest load in progress");
             }
             _closed = true;
             clearTimeout(_timeoutID);
-            try {
+            try
+            {
                 _urlloader.close();
-                if (_manifest_loading) {
+                if (_manifest_loading)
+                {
                     _manifest_loading.close();
                 }
-            } catch(e : Error) {
             }
+            catch(e : Error) {}
         }
 
         /** When the framework idles out, stop reloading manifest **/
-        private function _stateHandler(event : HLSEvent) : void {
+        private function _stateHandler(event:HLSEvent):void
+        {
+            CONFIG::LOGGING {
+                Log.debug("_stateHandler " + event.state);
+            }
+
             if (event.state == HLSPlayStates.IDLE) {
                 _close();
             }
-        };
+
+            if (event.state == HLSPlayStates.PLAYING && _closed)
+            {
+                CONFIG::LOGGING {
+                    Log.debug("_stateHandler -> should attempt reload of current level manifest");
+                    Log.debug("activelevel manifest? " + _levels + " " + _current_level);
+                }
+            }
+        }
+
+        private var _reconnecting:Boolean = false;
+
+        private function _reconnect(event:Event):void
+        {
+            CONFIG::LOGGING { Log.debug("_reconnect " +  _current_level); }
+            _reconnecting = true;
+            _canStart = false;
+             _loadActiveLevelPlaylist();
+        }
 
         public function get startlevel() : int {
             var start_level : int = -1;
