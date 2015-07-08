@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="Flex" version="4">
+  <component name="FlexBuildConfigurationManager" active="flashls">
+    <configurations>
+      <configuration name="flashls" output-type="Library" output-file="flashls.swc" output-folder="$MODULE_DIR$/lib">
+        <dependencies target-player="17.0">
+          <entries>
+            <entry library-id="248fa048-7777-4003-8336-f412ccd064e9">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="ea9b4f6b-d699-4597-847a-9d569cbb2eb3">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="c93aaa8a-0c31-4511-bac2-92ce2bf49e99">
+              <dependency linkage="Merged" />
+            </entry>
+            <entry library-id="35d02257-5c51-48c1-a6ee-89b3f2e0535b">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
+          <sdk name="4.6" />
+        </dependencies>
+        <compiler-options>
+          <map>
+            <entry key="compiler.locale" value="en_US" />
+          </map>
+          <option name="additionalOptions" value="-define CONFIG::LOGGING false" />
+        </compiler-options>
+        <packaging-air-desktop />
+        <packaging-android />
+        <packaging-ios />
+      </configuration>
+    </configurations>
+    <compiler-options />
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="4.6" jdkType="Flex SDK Type (new)" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="248fa048-7777-4003-8336-f412ccd064e9" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/osmf/OSMF.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="ea9b4f6b-d699-4597-847a-9d569cbb2eb3" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/blooddy_crypto.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="c93aaa8a-0c31-4511-bac2-92ce2bf49e99" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/as3crypto.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="35d02257-5c51-48c1-a6ee-89b3f2e0535b" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/flowplayer/flowplayer.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+  </component>
+</module>
