@@ -79,16 +79,24 @@
 //            CONFIG::LOGGING { Log.info("frame " + _force); }
             var newWidth : int = videoSurface.videoWidth;
             var newHeight : int = videoSurface.videoHeight;
-            if (newWidth != 0 && newHeight != 0 && (newWidth != mediaWidth || newHeight != mediaHeight)) {
+            if (_force || newWidth != 0 && newHeight != 0 && (newWidth != mediaWidth || newHeight != mediaHeight))
+            {
+                CONFIG::LOGGING { Log.info("setting media size"); }
                 // If there is no layout, set as no scale.
-                if (videoSurface.width == 0 && videoSurface.height == 0) {
-                    videoSurface.width = newWidth;
-                    videoSurface.height = newHeight;
+                if (videoSurface.width == 0 && videoSurface.height == 0)
+                {
+                    CONFIG::LOGGING { Log.info("setting default size, surface dimensions were zero"); }
+                    videoSurface.width = newWidth = _hls.stage.width;
+                    videoSurface.height = newHeight = _hls.stage.height;
+
+//                    videoSurface.width = newWidth;
+//                    videoSurface.height = newHeight;
                 }
-                CONFIG::LOGGING {
-                Log.info("HLSDisplayObjectTrait:setMediaSize(" + newWidth + "," + newHeight + ")");
-                }
+                CONFIG::LOGGING { Log.info("HLSDisplayObjectTrait:setMediaSize(" + newWidth + "," + newHeight + ")"); }
+
                 setMediaSize(newWidth, newHeight);
+
+                _force = false;
             }
             // videoSurface.removeEventListener(Event.ENTER_FRAME, onFrame);
         }
