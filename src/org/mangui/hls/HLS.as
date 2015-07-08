@@ -23,7 +23,8 @@
         import org.mangui.hls.utils.Log;
     }
     /** Class that manages the streaming process. **/
-    public class HLS extends EventDispatcher {
+    public class HLS extends EventDispatcher
+    {
         private var _fragmentLoader : FragmentLoader;
         private var _manifestLoader : ManifestLoader;
         private var _audioTrackController : AudioTrackController;
@@ -35,7 +36,8 @@
         private var _stage : Stage;
 
         /** Create and connect all components. **/
-        public function HLS() {
+        public function HLS()
+        {
             var connection : NetConnection = new NetConnection();
             connection.connect(null);
             _manifestLoader = new ManifestLoader(this);
@@ -44,10 +46,33 @@
             // default loader
             _fragmentLoader = new FragmentLoader(this, _audioTrackController);
             _hlsNetStream = new HLSNetStream(connection, this, _fragmentLoader);
-        };
+
+
+            CONFIG::LOGGING {
+                Log.info('HLS()');
+            }
+            addEventListener("HLS.Reconnect", reconnectHandler);
+        }
+
+        private function reconnectHandler(event:Event):void
+        {
+            CONFIG::LOGGING {
+                Log.info('**** HLS::reconnect ****');
+            }
+
+            _reconnect = true;
+        }
+
+        public function get reconnect():Boolean
+        {
+            return _reconnect;
+        }
+        private var _reconnect:Boolean;
+
 
         /** Forward internal errors. **/
-        override public function dispatchEvent(event : Event) : Boolean {
+        override public function dispatchEvent(event:Event):Boolean
+        {
             if (event.type == HLSEvent.ERROR) {
                 CONFIG::LOGGING {
                     Log.error((event as HLSEvent).error);
@@ -69,6 +94,7 @@
             _client = null;
             _stage = null;
             _hlsNetStream = null;
+            _reconnect = false;
         }
 
         /** Return the quality level used when starting a fresh playback **/
