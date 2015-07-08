@@ -113,6 +113,9 @@
         };
 
         public function dispose() : void {
+
+            CONFIG::LOGGING { Log.debug("FragmentLoader.dispose()"); }
+
             stop();
             _autoLevelManager.dispose();
             _hls.removeEventListener(HLSEvent.MANIFEST_LOADED, _manifestLoadedHandler);
@@ -123,6 +126,9 @@
 
         /**  fragment loading Timer **/
         private function _checkLoading(e : Event) : void {
+
+            CONFIG::LOGGING { Log.debug("_checkLoading-> " + _loading_state); }
+
             // cannot load fragment until manifest is loaded
             if (_manifest_loaded == false) {
                 return;
@@ -218,6 +224,8 @@
                     break;
                 // if key loading failed
                 case  LOADING_KEY_IO_ERROR:
+                    CONFIG::LOGGING { Log.debug("LOADING_KEY_IO_ERROR"); }
+
                     // compare current date and next retry date.
                     if (getTimer() >= _key_load_error_date) {
                         /* try to reload the key ...
@@ -228,6 +236,7 @@
                     break;
                 // if fragment loading failed
                 case LOADING_FRAGMENT_IO_ERROR:
+                    CONFIG::LOGGING { Log.debug("LOADING_FRAGMENT_IO_ERROR"); }
                     // compare current date and next retry date.
                     if (getTimer() >= _frag_load_error_date) {
                         /* try to reload the key ...
@@ -240,6 +249,9 @@
         }
 
         public function seek(position : Number, callback : Function) : void {
+
+            CONFIG::LOGGING { Log.info("fragment seek " + position); }
+
             // reset IO Error when seeking
             _frag_retry_count = _key_retry_count = 0;
             _frag_retry_timeout = _key_retry_timeout = 1000;
@@ -324,7 +336,8 @@
             CONFIG::LOGGING {
                 Log.error("I/O Error while loading fragment:" + message);
             }
-            if (HLSSettings.fragmentLoadMaxRetry == -1 || _frag_retry_count < HLSSettings.fragmentLoadMaxRetry) {
+            if (HLSSettings.fragmentLoadMaxRetry == -1 || _frag_retry_count < HLSSettings.fragmentLoadMaxRetry)
+            {
                 _loading_state = LOADING_FRAGMENT_IO_ERROR;
                 _frag_load_error_date = getTimer() + _frag_retry_timeout;
                 CONFIG::LOGGING {
@@ -333,9 +346,22 @@
                 /* exponential increase of retry timeout, capped to fragmentLoadMaxRetryTimeout */
                 _frag_retry_count++;
                 _frag_retry_timeout = Math.min(HLSSettings.fragmentLoadMaxRetryTimeout, 2 * _frag_retry_timeout);
-            } else {
-                var hlsError : HLSError = new HLSError(HLSError.FRAGMENT_LOADING_ERROR, _frag_current.url, "I/O Error :" + message);
-                _hls.dispatchEvent(new HLSEvent(HLSEvent.ERROR, hlsError));
+            }
+            else
+            {
+                // if live... try and reconnect to get up to date fragment bounds
+                if (true)
+                {
+                    _frag_retry_count = _key_retry_count = 0;
+                    _frag_retry_timeout = _key_retry_timeout = 1000;
+                    _loading_state = LOADING_IDLE;
+                    _hls.dispatchEvent(new Event("HLS.Reconnect"));
+                }
+                else
+                {
+                    var hlsError:HLSError = new HLSError(HLSError.FRAGMENT_LOADING_ERROR, _frag_current.url, "I/O Error :" + message);
+                    _hls.dispatchEvent(new HLSEvent(HLSEvent.ERROR, hlsError));
+                }
             }
         }
 
@@ -676,21 +702,29 @@
             }
             _loadfragment(frag);
             return LOADING_IN_PROGRESS;
-        };
+        }
 
-        private function _loadfragment(frag : Fragment) : void {
+        private function _loadfragment(frag:Fragment):void
+        {
+            CONFIG::LOGGING { Log.debug("_loadfragment-> " + frag.url) }
+
             // postpone URLStream init before loading first fragment
-            if (_fragstreamloader == null) {
-                if (_hls.stage == null) {
+            if (_fragstreamloader == null)
+            {
+                if (_hls.stage == null)
+                {
                     var err : String = "hls.stage not set, cannot parse TS data !!!";
-                    CONFIG::LOGGING {
-                        Log.error(err);
-                    }
+                    // because AES etc. requires access to stage to decrypt
+                    CONFIG::LOGGING { Log.error(err); }
+
+                    // wait for stage instead? it may have been removed temporarily
+
                     var hlsError : HLSError = new HLSError(HLSError.OTHER_ERROR, frag.url, err);
                     _hls.dispatchEvent(new HLSEvent(HLSEvent.ERROR, hlsError));
                     return;
                 }
-                var urlStreamClass : Class = _hls.URLstream as Class;
+
+                var urlStreamClass:Class = _hls.URLstream as Class;
                 _fragstreamloader = (new urlStreamClass()) as URLStream;
                 _fragstreamloader.addEventListener(IOErrorEvent.IO_ERROR, _fragLoadErrorHandler);
                 _fragstreamloader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _fragLoadErrorHandler);
@@ -703,11 +737,15 @@
                 _keystreamloader.addEventListener(HTTPStatusEvent.HTTP_STATUS, _keyLoadHTTPStatusHandler);
                 _keystreamloader.addEventListener(Event.COMPLETE, _keyLoadCompleteHandler);
             }
-            if (_hasDiscontinuity || _switchlevel) {
+
+            if (_hasDiscontinuity || _switchlevel)
+            {
                 _demux = null;
             }
+
             frag.metrics.loading_request_time = getTimer();
             _frag_current = frag;
+
             if (frag.decrypt_url != null) {
                 if (_keymap[frag.decrypt_url] == undefined) {
                     // load key
@@ -718,6 +756,7 @@
                     return;
                 }
             }
+
             try {
                 frag.data.bytes = null;
                 CONFIG::LOGGING {
