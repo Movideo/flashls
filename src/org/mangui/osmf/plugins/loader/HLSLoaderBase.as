@@ -2,7 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
  package org.mangui.osmf.plugins.loader {
-    import org.mangui.hls.HLS;
+ import flash.media.StageVideo;
+
+ import org.mangui.hls.HLS;
     import org.mangui.hls.event.HLSEvent;
 	import org.mangui.hls.model.Level;
     import org.mangui.hls.constant.HLSTypes;
@@ -18,8 +20,10 @@
     import org.osmf.net.DynamicStreamingResource;
     import org.osmf.net.StreamType;
     import org.osmf.net.StreamingURLResource;
+    import org.osmf.traits.MediaTraitType;
     import org.osmf.traits.LoadState;
     import org.osmf.traits.LoadTrait;
+    import org.osmf.traits.PlayTrait;
     import org.osmf.traits.LoaderBase;
     
     CONFIG::LOGGING {
@@ -69,6 +73,10 @@
         override protected function executeLoad(loadTrait : LoadTrait) : void {
             _loadTrait = loadTrait;
             updateLoadTrait(loadTrait, LoadState.LOADING);
+
+            CONFIG::LOGGING {
+                Log.warn("HLSLoaderBase::executeLoad.. " + _hls);
+            }
 
             if (_hls != null) {
                 _hls.removeEventListener(HLSEvent.MANIFEST_LOADED, _manifestHandler);
@@ -124,6 +132,12 @@
                 var loadedElem : MediaElement = new HLSMediaElement(resource, _hls, event.levels[_hls.startlevel].duration);
                 LoadFromDocumentLoadTrait(_loadTrait).mediaElement = loadedElem;
                 updateLoadTrait(_loadTrait, LoadState.READY);
+
+                if (_hls.reconnect)
+                {
+                    var playTrait:PlayTrait = loadedElem.getTrait(MediaTraitType.PLAY) as PlayTrait;
+                    playTrait.play();
+                }
             } catch(e : Error) {
                 updateLoadTrait(_loadTrait, LoadState.LOAD_ERROR);
                 _loadTrait.dispatchEvent(new MediaErrorEvent(MediaErrorEvent.MEDIA_ERROR, false, false, new MediaError(e.errorID, e.message)));
