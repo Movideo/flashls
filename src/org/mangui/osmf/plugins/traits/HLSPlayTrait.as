@@ -8,7 +8,7 @@
     import org.osmf.traits.PlayTrait;
 
     CONFIG::LOGGING {
-    import org.mangui.hls.utils.Log;
+        import org.mangui.hls.utils.Log;
     }
 
     public class HLSPlayTrait extends PlayTrait {
@@ -17,7 +17,7 @@
 
         public function HLSPlayTrait(hls : HLS) {
             CONFIG::LOGGING {
-            Log.debug("HLSPlayTrait()");
+                Log.debug("HLSPlayTrait()");
             }
             super();
             _hls = hls;
@@ -26,16 +26,18 @@
 
         override public function dispose() : void {
             CONFIG::LOGGING {
-            Log.debug("HLSPlayTrait:dispose");
+                Log.debug("HLSPlayTrait:dispose");
             }
             _hls.removeEventListener(HLSEvent.PLAYBACK_COMPLETE, _playbackComplete);
             super.dispose();
         }
 
-        override protected function playStateChangeStart(newPlayState : String) : void {
+        override protected function playStateChangeStart(newPlayState : String) : void
+        {
             CONFIG::LOGGING {
-            Log.info("HLSPlayTrait:playStateChangeStart:" + newPlayState);
+                Log.info("HLSPlayTrait:playStateChangeStart:" + newPlayState);
             }
+
             switch(newPlayState) {
                 case PlayState.PLAYING:
                     if (!streamStarted) {
@@ -56,7 +58,9 @@
         }
 
         /** playback complete handler **/
-        private function _playbackComplete(event : HLSEvent) : void {
+        private function _playbackComplete(event:HLSEvent):void
+        {
+            CONFIG::LOGGING { Log.info("_playbackComplete-> calling stop()"); }
             stop();
         }
     }

@@ -42,7 +42,12 @@
         private var videoSurface : VideoSurface;
         private var _smoothing : Boolean;
 
-        public function HLSMediaElement(resource : MediaResourceBase, hls : HLS, duration : Number) {
+        public function HLSMediaElement(resource : MediaResourceBase, hls : HLS, duration : Number)
+        {
+            CONFIG::LOGGING {
+                Log.warn("HLSMediaElement:constructor");
+            }
+
             _hls = hls;
             _defaultduration = duration;
             super(resource, new HLSNetLoader(hls));
@@ -113,7 +118,12 @@
             }
         }
 
-        private function initTraits() : void {
+        private function initTraits() : void
+        {
+            CONFIG::LOGGING {
+                Log.warn("initTraits");
+            }
+
             _stream = _hls.stream;
 
             // Set the video's dimensions so that it doesn't appear at the wrong size.
