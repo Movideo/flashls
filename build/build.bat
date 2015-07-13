@@ -1,7 +1,4 @@
 @echo off
-set FLEXPATH=PATH_OF_YOUR_FLEX_SDK
-set JAVA_HOME=PATH_OF_YOUR_JAVA_SDK_x86
-
 set OPT_DEBUG=-use-network=false ^
     -optimize=true ^
     -define=CONFIG::LOGGING,true ^
