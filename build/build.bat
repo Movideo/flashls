@@ -12,12 +12,12 @@ set OPT_RELEASE=-use-network=false ^
 set OPT_DEBUG_10_1=-use-network=false ^
     -optimize=true ^
     -define=CONFIG::LOGGING,true ^
-    -define=CONFIG::FLASH_11_1,false
+    -define=CONFIG::FLASH_11_1,true
 
 set OPT_RELEASE_10_1=-use-network=false ^
     -optimize=true ^
     -define=CONFIG::LOGGING,false ^
-    -define=CONFIG::FLASH_11_1,false
+    -define=CONFIG::FLASH_11_1,true
 
 echo "Compiling bin\debug\flashls.swc"
 
