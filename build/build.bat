@@ -25,14 +25,14 @@ echo "Compiling bin\debug\flashls.swc"
     %OPT_DEBUG_10_1% ^
     -include-sources ..\src\org\mangui\hls ^
     -output ..\bin\debug\flashls.swc ^
-    -target-player="10.2"
+    -target-player="18.0"
 
 echo "Compiling bin\release\flashls.swc"
 @call "%FLEXPATH%\bin\compc" ^
     %OPT_RELEASE_10_1% ^
     -include-sources ..\src\org\mangui\hls ^
     -output ..\bin\release\flashls.swc ^
-    -target-player="10.2"
+    -target-player="18.0"
 
 echo "Compiling bin\release\flashlsChromeless.swf"
 @call "%FLEXPATH%\bin\mxmlc" ..\src\org\mangui\chromeless\ChromelessPlayer.as ^
@@ -80,7 +80,7 @@ echo "Compiling bin\release\flashlsOSMF.swf"
     %OPT_RELEASE_10_1% ^
     -library-path+=..\lib\osmf ^
     -load-externs=..\lib\osmf\exclude-sources.xml ^
-    -target-player="10.2"
+    -target-player="18.0"
 .\add-opt-in.py ..\bin\release\flashlsOSMF.swf
 
 echo "Compiling bin\debug\flashlsOSMF.swf"
@@ -90,7 +90,7 @@ echo "Compiling bin\debug\flashlsOSMF.swf"
     %OPT_DEBUG_10_1% ^
     -library-path+=..\lib\osmf ^
     -load-externs=..\lib\osmf\exclude-sources.xml ^
-    -target-player="10.2"
+    -target-player="18.0"
 .\add-opt-in.py ..\bin\debug\flashlsOSMF.swf
 
 echo "Compiling bin\release\flashlsOSMF.swc"
