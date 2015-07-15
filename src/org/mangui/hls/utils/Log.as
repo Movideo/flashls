@@ -15,37 +15,43 @@ package org.mangui.hls.utils
         private static const LEVEL_WARN : String = "WARN:";
         private static const LEVEL_ERROR : String = "ERROR:";
 
-        public static function info(message : *) : void {
-//            if (HLSSettings.logInfo)
+        public static function info(message:*):void
+        {
+            if (HLSSettings.logInfo)
                 outputlog(LEVEL_INFO, String(message));
-        };
+        }
 
-        public static function debug(message : *) : void {
-//            if (HLSSettings.logInfo)
-//                outputlog(LEVEL_DEBUG, String(message));
-        };
+        public static function debug(message:*):void
+        {
+            if (HLSSettings.logDebug)
+                outputlog(LEVEL_DEBUG, String(message));
+        }
 
-        public static function debug2(message : *) : void {
-//            if (HLSSettings.logDebug2)
-//                outputlog(LEVEL_DEBUG, String(message));
-        };
+        public static function debug2(message:*):void
+        {
+            if (HLSSettings.logDebug2)
+                outputlog(LEVEL_DEBUG, String(message));
+        }
 
-        public static function warn(message : *) : void {
-//            if (HLSSettings.logWarn)
+        public static function warn(message:*):void
+        {
+            if (HLSSettings.logWarn)
                 outputlog(LEVEL_WARN, String(message));
-        };
+        }
 
-        public static function error(message : *) : void {
-//            if (HLSSettings.logError)
+        public static function error(message:*):void
+        {
+            if (HLSSettings.logError)
                 outputlog(LEVEL_ERROR, String(message));
-        };
+        }
 
         /** Log a message to the console. **/
-        private static function outputlog(level : String, message : String) : void {
+        private static function outputlog(level:String, message:String):void
+        {
             trace(level + message);
             if (ExternalInterface.available)
                 ExternalInterface.call('console.log', level + message);
             else trace(level + message);
         }
-    };
+    }
 }
