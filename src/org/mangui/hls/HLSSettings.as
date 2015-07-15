@@ -43,7 +43,7 @@ package org.mangui.hls {
          *
          * Default is 60.
          */
-        public static var maxBufferLength : Number = 60;
+        public static var maxBufferLength : Number = 30;
         /**
          * Defines low buffer length in seconds.
          * When crossing down this threshold, HLS will switch to buffering state.
@@ -79,7 +79,7 @@ package org.mangui.hls {
          *      0, means no retry, error will be triggered automatically
          *     -1 means infinite retry
          */
-        public static var fragmentLoadMaxRetry : int = -1;
+        public static var fragmentLoadMaxRetry : int = 1;
 
         /** fragmentLoadMaxRetryTimeout
 
@@ -96,7 +96,7 @@ package org.mangui.hls {
          *
          * Default is false
          */
-        public static var flushLiveURLCache : Boolean = false;
+        public static var flushLiveURLCache : Boolean = true;
         /** max nb of retries for Manifest Loading in case I/O errors are met,
          *      0, means no retry, error will be triggered automatically
          *     -1 means infinite retry
@@ -141,7 +141,7 @@ package org.mangui.hls {
          * Defines whether INFO level log messages will will appear in the console
          * Default is true.
          */
-        public static var logInfo : Boolean = true;
+        public static var logInfo : Boolean = false;
         /**
          * Defines whether DEBUG level log messages will will appear in the console
          * Default is false.
@@ -156,7 +156,7 @@ package org.mangui.hls {
          * Defines whether WARN level log messages will will appear in the console
          * Default is true.
          */
-        public static var logWarn : Boolean = true;
+        public static var logWarn : Boolean = false;
         /**
          * Defines whether ERROR level log messages will will appear in the console
          * Default is true.
